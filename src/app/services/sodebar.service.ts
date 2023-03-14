@@ -11,7 +11,9 @@ export class SodebarService {
      subMenu:[
       {title:'Main',url:'/'},
       {title:'ProgressBar',url:'/dashboard/progress'},
-      {title:'Grafica',url:'/dashboard/grafica1'}
+      {title:'Grafica',url:'/dashboard/grafica1'},
+      {title:'Promesas',url:'/dashboard/promesas'},
+      {title:'rxjs',url:'/dashboard/rxjs'}
      ]
     }
   ]
