@@ -1,3 +1,4 @@
+import { Usuario } from './../models/usuario.model';
 
 import { environment } from './../../environments/environment';
 import { HttpClient } from '@angular/common/http';
@@ -16,23 +17,41 @@ const base_url = environment.base_url;
 })
 export class UsuarioService {
 
+  public usuario:Usuario;
 
+  get token():string{
+    return localStorage.getItem('token') || '';
+  }
+
+  get uid():string{
+    return this.usuario.uid || '';
+  }
 
   constructor(private http:HttpClient) { }
 
   public validarToken():Observable<boolean>{
-    let token = localStorage.getItem('token') || '';
+
 
     return this.http.get(`${base_url}/login/renew`,{
                           headers:{
-                            'x-token':token
+                            'x-token':this.token
                           }
                         })
                         .pipe(
-                          tap((resp:any)=>{
+                          map((resp:any)=>{
+                            console.log(resp);
+                            this.usuario=new Usuario(
+                              resp.usuario.nombre,
+                              resp.usuario.email,
+                              resp.usuario.google,
+                              '',
+                              resp.usuario.img||'',
+                              resp.usuario.rol,
+                              resp.usuario.uid
+                            );
                             localStorage.setItem('token',resp.token);
+                            return true;
                           }),
-                          map((resp)=> true),
                           catchError((error)=> of(false))
                         );
   }
@@ -46,6 +65,24 @@ export class UsuarioService {
                         localStorage.setItem('token',resp.token);
                       })
                     );
+  }
+
+  public actualizarPerfil(formData:{nombre:string,email:string,rol:string}){
+
+    formData={...formData,rol:this.usuario.rol}
+
+    return  this.http.put(`${base_url}/usuarios/${this.uid}`,formData,{
+                          headers:{
+                            'x-token':this.token
+                          }
+                        })
+                     .pipe(
+                      tap((resp)=>{
+                        return resp;
+                      }),
+                      catchError((error)=> of(false))
+                     )
+
   }
 
   public login(formData:LoginForm){
@@ -76,6 +113,9 @@ export class UsuarioService {
   });
 
  }
+
+
+
 
 }
 

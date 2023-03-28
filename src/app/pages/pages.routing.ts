@@ -1,3 +1,4 @@
+import { PerfilComponent } from './perfil/perfil.component';
 import { RxjsComponent } from './rxjs/rxjs.component';
 
 import { AccountSettingsComponent } from './account-settings/account-settings.component';
@@ -24,6 +25,7 @@ const routes:Routes=[
       {path:'grafica1',component:Grafica1Component,data:{title:'Grafica1',prm:'parametro2'}},
       {path:'account-settings',component:AccountSettingsComponent,data:{title:'Account-Settings',prm:'parametro2'}},
       {path:'promesas',component:PromesasComponent,data:{title:'Promesas',prm:'parametro2'}},
+      {path:'perfil',component:PerfilComponent,data:{title:'Perfil'}},
       {path:'rxjs',component:RxjsComponent,data:{title:'rxjs',prm:'parametro2'}}
     ]
   },
