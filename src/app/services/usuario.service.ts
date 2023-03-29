@@ -3,10 +3,11 @@ import { Usuario } from './../models/usuario.model';
 import { environment } from './../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { tap, map, catchError } from 'rxjs/operators';
+import { tap, map, catchError, delay } from 'rxjs/operators';
 import { RegisterForm } from '../interfaces/register-form.interface';
 import { LoginForm } from './../interfaces/login-form.interface';
 import { Observable, of } from 'rxjs';
+import { CargarUsuario } from '../interfaces/cargar-usuarios.interface';
 
 declare const google:any;
 
@@ -27,6 +28,14 @@ export class UsuarioService {
     return this.usuario.uid || '';
   }
 
+  get headers(){
+    return {
+      headers:{
+        'x-token':this.token
+      }
+    }
+  }
+
   constructor(private http:HttpClient) { }
 
   public validarToken():Observable<boolean>{
@@ -39,7 +48,6 @@ export class UsuarioService {
                         })
                         .pipe(
                           map((resp:any)=>{
-                            console.log(resp);
                             this.usuario=new Usuario(
                               resp.usuario.nombre,
                               resp.usuario.email,
@@ -71,11 +79,7 @@ export class UsuarioService {
 
     formData={...formData,rol:this.usuario.rol}
 
-    return  this.http.put(`${base_url}/usuarios/${this.uid}`,formData,{
-                          headers:{
-                            'x-token':this.token
-                          }
-                        })
+    return  this.http.put(`${base_url}/usuarios/${this.uid}`,formData,this.headers)
                      .pipe(
                       tap((resp)=>{
                         return resp;
@@ -114,7 +118,47 @@ export class UsuarioService {
 
  }
 
+ public cargarUsuarios(desde:number=0){
 
+    //http://localhost:3000/api/usuarios?desde=0
+    let url =`${base_url}/usuarios?desde=${desde}`;
+    // return this.http.get<{total:number,usuarios:Usuario[]}>(url,this.headers);
+    return this.http.get<CargarUsuario>(url,this.headers)
+                    .pipe(
+                      //solo para fines demostrativos.
+                      delay(1000),
+                      map(resp=>{
+                        let usuarioslist =resp.usuarios.map(
+                          user => new Usuario(user.nombre,user.email,user.google,'',user.img,user.rol,user.uid)
+                        );
+
+                        return {
+                          total:resp.total,
+                          usuarios:usuarioslist
+                        };
+                      })
+                    )
+ }
+
+ public eliminarUsuario(usuario:Usuario){
+
+  //http://localhost:3000/api/usuarios/6414c32a1553fc750b76b3f2
+  let url =`${base_url}/usuarios/${usuario.uid}`;
+  return this.http.delete(url,this.headers);
+
+ }
+
+ public actualizarUsuario(usuario:Usuario){
+
+  return  this.http.put(`${base_url}/usuarios/${usuario.uid}`,usuario,this.headers)
+                   .pipe(
+                    tap((resp)=>{
+                      return resp;
+                    }),
+                    catchError((error)=> of(false))
+                   )
+
+}
 
 
 }

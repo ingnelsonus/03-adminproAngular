@@ -15,6 +15,14 @@ export class SodebarService {
       {title:'Promesas',url:'/dashboard/promesas'},
       {title:'rxjs',url:'/dashboard/rxjs'}
      ]
+    },
+    {title:'Mantenimiento',
+     icon:'mdi mdi-folder-lock-open',
+     subMenu:[
+      {title:'Usuarios',url:'usuarios'},
+      {title:'Hospitales',url:'hospitales'},
+      {title:'Medicos',url:'medicos'}
+     ]
     }
   ]
 
