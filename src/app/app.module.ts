@@ -10,6 +10,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { NotpagefoundComponent } from './notpagefound/notpagefound.component';
 
+
 @NgModule({
   declarations: [
     AppComponent,

@@ -23,12 +23,13 @@ export class UsuariosComponent implements OnInit,OnDestroy {
   public usuariosTemp:Usuario []=[];
   public desde:number=0;
   public cargando:boolean=true;
-public imgSubs:Subscription;
+  public imgSubs:Subscription;
 
   constructor(private usuarioService:UsuarioService,
               private busquedaService:BusquedasService,
               private modalImageService:ModalImagenService
              ) { }
+
   ngOnDestroy(): void {
     this.imgSubs.unsubscribe();
   }
@@ -75,7 +76,7 @@ public imgSubs:Subscription;
     }
 
     this.busquedaService.buscar('usuarios',termino)
-                        .subscribe(resultados=>{
+                        .subscribe((resultados:Usuario[])=>{
                           this.usuarios = resultados
                         });
   }
