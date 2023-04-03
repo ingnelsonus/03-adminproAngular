@@ -19,7 +19,7 @@ export class SodebarService {
     {title:'Mantenimiento',
      icon:'mdi mdi-folder-lock-open',
      subMenu:[
-      {title:'Usuarios',url:'usuarios'},
+       {title:'Usuarios',url:'usuarios'},
       {title:'Hospitales',url:'hospitales'},
       {title:'Medicos',url:'medicos'}
      ]
